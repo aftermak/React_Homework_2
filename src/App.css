@@ -37,6 +37,8 @@
   }
 }
 
-table {
-  border: 1px, solid, black;
+.active {
+  background-color: #61dafb;
+  color: green;
+  font-weight: bold;
 }
