@@ -1,12 +1,15 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 
-export default class Element extends PureComponent {
+export default class Element extends Component {
 
 
   render() {
-    let { element } = this.props
-    return (
-      <td>{element}</td>
-    )
+    let { animal } = this.props
+    return <>
+      <td>{animal.type}</td>
+      <td>{animal.icon}</td>
+    </>
+      
+    
   }
 }
