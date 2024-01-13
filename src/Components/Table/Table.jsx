@@ -1,84 +1,56 @@
-import React, { Component } from 'react'
-import Element from './Element'
+import React, { PureComponent } from 'react';
+import Element from './Element';
+import './Table.css';
+import { getRandomInt } from '../../utils/utils';
 
-export default class Table extends Component {
+export default class Table extends PureComponent {
     state = {
-        color: 'red',
-        borderWidht: '0px',
+        borderWidth: '0px',
         ...this.props,
     }
 
     componentDidMount() { 
-        // console.log(this.state);
-        setInterval(() => {
-            this.setState( 
-                this.state.array.map((item) => {
-                    return (item.active = 'active');
-                })
-            , () => {
-                console.log(this.state)
-            }
-            )
-        }, 2000);
 
-        // this.setState((actualState) => {
-        //     actualState.array.map((item) => {
-        //         return item.isActive = 'active';
-        //     })
-        // }, () => {
-        //     console.log(this.state);
-        // })
+        const activeUppdate = setInterval(() => {
+            const indexActive = getRandomInt(0, this.props.animals.length);
+            this.setState((actualState) => (
+                {
+                    animals: actualState.animals.map((item, index) => {
+                        return (index === indexActive ? {...item, active: 'active'} : item)
+                    })
+                }), () => {
+                    let activeAnimals = this.state.animals.filter((item) => item.active)
 
-        // setInterval(() => {
-        //     this.setState({
-        //         color:'green'
-        //     })
-        // }, 2000);
+                    if (activeAnimals.length > Math.floor(this.props.animals.length/2)) {
+                        this.setState ({
+                            borderWidth: '10px'
+                        })
+                    }
 
-
-
-        // const number = (list) => {
-        //     return list[Math.round((Math.random()*list.length))];
-        // }
-
-
-
-        // const selectItem = setInterval(() => {
-
-        //     this.setState((actualState) => () => {
-        //         const newArr = this.state.array.filter((item)=> {
-        //             return item === true;
-        //         })
-    
+                    if (activeAnimals.length === this.props.animals.length) {
+                        clearInterval(activeUppdate);
+                        this.setState ({
+                            borderWidth: '20px'
+                        }
+                        
+                        )
+                    }
+                }
                 
-        //         if (newArr.length === Math.round(this.props.array.length/2)) {
-        //             this.setState({
-        //                 borderWidht:'10px'
-        //             })
-        //         }
-
-        //         if(newArr.length === this.props.array.length){
-        //             clearInterval(selectItem);
-        //             this.setState({
-        //                 borderWidht:'20px'
-        //             })
-        //         }
-            
-        //     })
-        // }, 2000);
-      
-        
-     }
+            )
+        }, 2000)
+    } 
 
   render() {
-    let { array=[], borderWidht } = this.state
-
-    
-    return (array.length ? (
-      <table style={ {border: ' solid rgba(0, 0, 0)', borderWidth: borderWidht } } >
+    let { animals=[], borderWidth } = this.state
+    let styles = {
+        border: 'solid rgba(0, 0, 0)',
+        borderWidth,
+    }
+    return (animals.length ? (
+      <table style={ styles } >
         <tbody>
-            {array.map((item, index) => {
-                console.log(item)
+            {animals.map((item, index) => {
                 return <tr className={item.active} key={index}>
                     <Element key={index} animal={item}/>
                 </tr>
