@@ -13,31 +13,21 @@ export default class Table extends PureComponent {
 
     componentDidMount() {
 
-        console.log('did mount');
+        this.setState({
+            indexActive: getRandomInt(0, this.props.animals.length)
+        })
 
         const activeUppdate = setInterval(() => {
-            this.setState(() => (
-                {
-                    indexActive: getRandomInt(0, this.props.animals.length),
-                }
-            ),
-                () => { console.log(this.state.indexActive, this.state.index);
-                        this.state.index.includes(this.state.indexActive) ?
-                        this.setState({ indexActive: getRandomInt(0, this.props.animals.length) }) :
-                        this.setState((actualState) => (
-                            {
-                                index: [...actualState.index, this.state.indexActive]
-                            }
-                        )
-                    )
-                })
-
             this.setState((actualState) => (
                 {
                     animals: actualState.animals.map((item, index) => {
                         return (index === this.state.indexActive ? { ...item, active: 'active' } : item)
                     }),
                 }), () => {
+                    this.setState((actualState) => ({
+                        index: [...actualState.index, actualState.indexActive]
+                    }))
+
                     let activeAnimals = this.state.animals.filter((item) => item.active);
                     if (activeAnimals.length > Math.floor(this.props.animals.length / 2)) {
                         this.setState({
@@ -51,14 +41,17 @@ export default class Table extends PureComponent {
                         })
                     }
                 }
-
             )
         }, 2000)
     }
 
     componentDidUpdate () {
-        this.setState({name:'Max'})
-        console.log('did update');
+        
+        this.setState((actualState) => (
+            actualState.index.includes(actualState.indexActive) ? 
+            {indexActive: getRandomInt(0, this.props.animals.length)}
+            : null)
+        )
     }
 
     render() {
