@@ -24,9 +24,11 @@ export default class Table extends PureComponent {
                         return (index === this.state.indexActive ? { ...item, active: 'active' } : item)
                     }),
                 }), () => {
-                    this.setState((actualState) => ({
-                        index: [...actualState.index, actualState.indexActive]
-                    }))
+                    this.setState((actualState) => (
+                            {
+                                index: [...actualState.index, actualState.indexActive]
+                            }
+                        ))
 
                     let activeAnimals = this.state.animals.filter((item) => item.active);
                     if (activeAnimals.length > Math.floor(this.props.animals.length / 2)) {
@@ -43,15 +45,19 @@ export default class Table extends PureComponent {
                 }
             )
         }, 2000)
+
+        this.setState({setInterval})
     }
 
     componentDidUpdate () {
-        
+    
         this.setState((actualState) => (
-            actualState.index.includes(actualState.indexActive) ? 
+            actualState.index.includes(actualState.indexActive) &&
+            actualState.index.length !== this.props.animals.length &&
             {indexActive: getRandomInt(0, this.props.animals.length)}
-            : null)
+            )
         )
+
     }
 
     render() {
